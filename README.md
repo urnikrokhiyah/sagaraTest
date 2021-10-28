@@ -8,3 +8,4 @@
 | POST | /products | create a new product| Yes
 | PUT   | /products/{id} | Update existing product | Yes 
 | DELETE| /products/{id} | Delete existing product | Yes 
+| POST | /products/{id}/images | upload image of product| Yes
