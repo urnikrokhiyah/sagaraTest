@@ -1,3 +1,17 @@
+
+# How to Use
+- Install Go & MySQL
+- Create new .env file
+```
+$ export CONNECTION="{database_username}:{database_password}@tcp({database_host}:{database_port})/{database_name}?charset=utf8&&parseTime=True&loc=Local"
+```
+- Clone and Run 
+```
+$ git clone https://github.com/urnikrokhiyah/sagaraTest.git
+$ source .env && go run main.go
+```
+# List of Endpoint
+
 | Method | Endpoint | Description| Authorization
 |:-----|:--------|:----------| :----------:|
 | POST  | /register | Register a new user | No 
