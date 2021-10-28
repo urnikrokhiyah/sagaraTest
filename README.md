@@ -23,3 +23,5 @@ $ source .env && go run main.go
 | PUT   | /products/{id} | Update existing product | Yes 
 | DELETE| /products/{id} | Delete existing product | Yes 
 | POST | /products/{id}/images | upload image of product| Yes
+
+- Note: The RESTful API using Db.AutoMigrate
