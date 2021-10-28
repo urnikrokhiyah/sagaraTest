@@ -1,0 +1,655 @@
+openapi: '3.0.2'
+info:
+  title: Backend Sagara Technology Test
+  version: '1.0'
+  description: "The OpenAPI documentation of Backend Sagara Tech test"
+  contact:
+    name : "Test Backend Sagara Tech Support"
+    email : "support.test.sagara@gmail.com"
+servers:
+  - url: https://{environment}.api.server.test/v1
+    description: "Test REStful API Server"
+    variables:
+      environment: 
+        default: dev
+        enum:
+          - "prod"
+          - "dev"
+paths:
+  /register/{role}:
+    post:
+      tags:
+        - "User"
+      summary: "Create new user data"
+      description: "Create new user"
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestUser'
+            examples:
+              anna: 
+                description: "Example for register user"
+                value: {
+                  "name" : "anna",
+                  "email" : "anna@gmail.com",
+                  "password" : "anna1234",
+                  "address" : "malang-sk",
+                } 
+
+      responses:
+        '200':
+          description: "response while success to create new user "
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseUpdateCreate'
+              examples:
+                success: 
+                  description: "Example for register user"
+                  value: {
+                    "status": "success",
+                    "message": "success to create new user",
+                    "data": {
+                      "id" : 1,
+                      "name" : "anna",
+                      "email": "anna@gmail.com",                  
+                    } 
+                  }
+        '400':
+          description: "response while failed to create new user"           
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failedResponse'
+              examples:
+                failed:
+                  description: "Example failed to create new user"
+                  value: {
+                    "status": "failed",
+                    "message": "failed to create new user",
+                  }
+
+  /login:
+    post:
+      tags:
+        - "User"
+      summary: "Login existing user"
+      description: "Login existing user"
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestUser'
+            examples:
+              anna: 
+                description: "Example for login user"
+                value: {
+                  "email" : "anna@gmail.com",
+                  "password" : "anna1234",
+                } 
+
+      responses:
+        '200':
+          description: "response while success to login user account"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseUpdateCreate'
+              examples:
+                success: 
+                  description: "Example while success to login user account"
+                  value: {
+                    "status": "success",
+                    "message": "success to login",
+                    "data": {
+                      "email": "anna@gmail.com",
+                      "token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2MzU0MjM3NDQsInJvbGUiOiJhZG1pbiIsInVzZXJJZCI6MX0.qzV-R1sudscjXhmTO0M1TYZtcuyqqV-syqVtFP581s8"                  
+                    } 
+                  }
+                failed: 
+                  description: "Example while user account not found"
+                  value: {
+                    "status": "success",
+                    "message": "user data not found",
+                  }
+
+        '400':
+          description: "response while failed to login existing user"           
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failedResponse'
+              examples:
+                failed:
+                  description: "Example failed to login"
+                  value: {
+                    "status": "failed",
+                    "message": "failed to login",
+                  }
+
+
+  /products:
+    get:
+      tags:
+        - "Product"
+      summary: "Get list of product data"
+      security:
+        - JWTAuth: []
+      description: "Get all available products"
+      responses:
+        '200':
+          description: "response while success to get list product "
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {
+                  "status": {
+                    type: string
+                  },
+                  "message": {
+                    type: string
+                  },
+                  "data": {
+                    type: array,
+                    items: {
+                      type: object,
+                       properties: {
+                         "name": {
+                           type: string
+                         },
+                         "price": {
+                           type: number
+                         }
+                       }
+                         
+                    }
+                  }
+                }
+              examples:
+                success: 
+                  description: "Example success get list of products"
+                  value: {
+                    "status": "success",
+                    "message": "success to get list of products",
+                    "data": [ 
+                      {
+                      "name": "milk",
+                      "price": 10000,
+                      },
+                      {
+                      "name": "tea",
+                      "price": 1000,
+                      },
+                    ]
+                  }
+                failed:
+                  description: "Example list of products not found"
+                  value: {
+                    "status": "success",                  
+                    "message": "list of products not found",
+                  }
+        '400':
+          description: "response while failed to get list of products "           
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failedResponse'
+              examples:
+                failed:
+                  description: "Example failed to get list products"
+                  value: {
+                    "status": "failed",
+                    "message": "failed to get list of products",
+                  }           
+
+    post:
+      tags:
+        - "Product"
+      summary: "Create new product data"
+      security:
+        - JWTAuth: []
+      description: "Create new product"
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestProduct'
+            examples:
+              milk: 
+                description: "Example for milk product"
+                value: {
+                  "name" : "milk",
+                  "image_path" : "/local/images/milk.png",
+                  "price" : 10000,
+                  "stock" : 100,
+                  "category" : "beverage",
+                  "description" : "milk with cholcolate taste"
+                } 
+
+      responses:
+        '200':
+          description: "response while success to create new product "
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseUpdateCreate'
+              examples:
+                success: 
+                  description: "Example for milk product"
+                  value: {
+                    "status": "success",
+                    "message": "success to create new product",
+                    "data": {
+                      "name" : "milk",
+                      "image_path" : "/local/images/milk.png",
+                      "price" : 10000,
+                      "stock" : 100,
+                      "category" : "beverage",
+                      "description" : "milk with cholcolate taste"                    
+                    } 
+                  }
+        '400':
+          description: "response while failed to create new product"           
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failedResponse'
+              examples:
+                failed:
+                  description: "Example failed to create new product"
+                  value: {
+                    "status": "failed",
+                    "message": "failed to create new product",
+                  }
+                unauthorized:
+                  description: "Example unauthorized access"
+                  value: {
+                    "status": "failed",
+                    "message": "unauthorized access",
+                  } 
+
+  /product/{id}:
+    get:
+      tags:
+        - "Product"
+      summary: "Get product detail"
+      security:
+        - JWTAuth: []
+      description: "Get product detail by id"
+      parameters:
+        - $ref: '#/components/parameters/productId' 
+      responses:
+        '200':
+          description: "response while success to get product detail"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseDelete'
+              examples:
+                success: 
+                  description: "Example success to get product detail"
+                  value: {
+                    "status": "success",                  
+                    "message": "success to get product detail",
+                    "data": {
+                      "name" : "milk",
+                      "image_path" : "/local/images/milk.png",
+                      "price" : 10000,
+                      "stock" : 100,
+                      "category" : "beverage",
+                      "description" : "milk with cholcolate taste"
+                    }
+                  }
+                failed:
+                  description: "Example for product data not found"
+                  value: {
+                    "status": "success",
+                    "message": "product data not found",
+
+                  }
+        '400':
+          description: "response while failed to get product detail"           
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failedResponse'
+              examples:
+                failed:
+                  description: "Example failed to get product detail"
+                  value: {
+                    "status": "failed",                    
+                    "message": "failed to get product detail",
+                  }
+                invalid productId:
+                  description: "Example Invalid product id"
+                  value: {
+                    "status": "failed",                    
+                    "message": "invalid product id",
+                  }
+
+    put:
+      tags:
+        - "Product"
+      summary: "Update product data"
+      security:
+        - JWTAuth: []
+      description: "Update product data in database"
+      parameters:
+        - $ref: '#/components/parameters/productId' 
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              $ref: '#/components/schemas/requestProduct'
+            examples:
+              milk: 
+                description: "Example for milk product"
+                value: {
+                  "name" : "milk",
+                  "image_path" : "/local/images/milk.png",
+                  "price" : 10000,
+                  "stock" : 1000,
+                  "category" : "beverage",
+                  "description" : "milk with cholcolate taste"
+                }
+
+      responses:
+        '200':
+          description: "response while success to update product data"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseUpdateCreate'
+              examples:
+                success: 
+                  description: "Example success to update product data"
+                  value: {
+                    "status": "success",
+                    "message": "success to update product data",
+                    "data": "updated data"
+                  }
+
+                failed:
+                  description: "Example product data not found"
+                  value: {
+                    "status": "success",
+                    "message": "product data not found",
+                  }
+        '400':
+          description: "response while failed to update product data"           
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failedResponse'
+              examples:
+                failed:
+                  description: "Example failed to update product data"
+                  value: {
+                    "status": "failed",                    
+                    "message": "failed to update product data",
+                  }
+                unauthorized:
+                  description: "Example unauthorized access"
+                  value: {
+                    "status": "failed",                    
+                    "message": "unauthorized access",
+                  }
+                invalid productId:
+                  description: "Example Invalid product id"
+                  value: {
+                    "status": "failed",                    
+                    "message": "invalid product id",
+                  }
+
+    delete:
+      tags:
+        - "Product"
+      summary: "Delete product data"
+      security:
+        - JWTAuth: []
+      description: "Delete product data in database"
+      parameters:
+        - $ref: '#/components/parameters/productId' 
+      responses:
+        '200':
+          description: "response while success to delete product data"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseDelete'
+              examples:
+                success: 
+                  description: "Example success to delete product data"
+                  value: {
+                    "status": "success",                  
+                    "message": "success to delete product data",
+                    "data": "deleted",
+                  }
+                failed:
+                  description: "Example for product data not found"
+                  value: {
+                    "status": "success",
+                    "message": "product data not found",
+
+                  }
+        '400':
+          description: "response while failed to delete product data"           
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failedResponse'
+              examples:
+                failed:
+                  description: "Example failed to delete product data"
+                  value: {
+                    "status": "failed",                    
+                    "message": "failed to delete product data",
+                  }
+                unauthorized:
+                  description: "Example unauthorized access"
+                  value: {
+                    "status": "failed",                    
+                    "message": "unauthorized access",
+                  }
+                invalid productId:
+                  description: "Example Invalid product id"
+                  value: {
+                    "status": "failed",                    
+                    "message": "invalid product id",
+                  }
+
+  /product/{id}/images:
+    post:
+      tags:
+        - "Product"
+      summary: "Update image of product"
+      security:
+        - JWTAuth: []
+      description: "Update image of product"
+      parameters:
+        - $ref: '#/components/parameters/productId' 
+      requestBody:
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+
+      responses:
+        '200':
+          description: "response while success to upload image of product"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseUpdateCreate'
+              examples:
+                success: 
+                  description: "Example success to update image of product"
+                  value: {
+                    "status": "success",
+                    "message": "success to update image of product",
+                    "data": "updated image"
+                  }
+
+                failed:
+                  description: "Example product data not found"
+                  value: {
+                    "status": "success",
+                    "message": "product data not found",
+                  }
+        '400':
+          description: "response while failed to upload image of product"           
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/failedResponse'
+              examples:
+                failed:
+                  description: "Example failed to upload image of product"
+                  value: {
+                    "status": "failed",                    
+                    "message": "failed to update image of product",
+                  }
+                unauthorized:
+                  description: "Example unauthorized access"
+                  value: {
+                    "status": "failed",                    
+                    "message": "unauthorized access",
+                  }
+                invalid productId:
+                  description: "Example Invalid product id"
+                  value: {
+                    "status": "failed",                    
+                    "message": "invalid product id",
+                  }
+                error format of image:
+                  description: "Example error format to upload image of product"
+                  value: {
+                    "status": "failed",                    
+                    "message": "can't upload image of product",
+                  }
+
+#################
+components:
+#################
+  schemas:
+    requestProduct: 
+      type: object
+      properties:
+        "name":
+          type: string
+          minLength: 1
+        "image_path":
+          type: string
+        "price":
+          type: number
+        "stock":
+          type: number
+        "category":
+          type: string
+          minLength: 1
+        "description":
+          type: string
+
+    requestUser: 
+      type: object
+      properties:
+        "name":
+          type: string
+          minLength: 1
+        "email":
+          type: string
+        "password":
+          type: string
+        "address":
+          type: string
+
+    failedResponse:
+      type: object
+      properties: {
+        "status": {
+          type: string
+        },
+        "message": {
+          type: string
+        },
+      }
+
+    responseDelete:
+      type: object
+      properties: {
+        "status": {
+          type: string
+        },
+        "message": {
+          type: string
+        },
+        "data": {
+          type: string
+          }
+        }
+
+    responseUpdateCreate:
+      type: object
+      properties: {
+        "status": {
+          type: string
+        },
+        "message": {
+          type: string
+        },
+        "data": {
+          type: object,
+          properties: {
+            "name": {
+              type: string
+            },
+            "image_path": {
+              type: string
+            },
+            "price": {
+              type: number 
+            },
+            "stock" : {
+              type: number
+            },
+            "category" : {
+              type: string
+            },
+            "description" : {
+              type: string  
+            },
+          }
+        }
+      }
+
+  parameters:
+    productId:
+      name: "id"
+      in: "path"
+      required: true
+      description: "product id for update or delete product data"
+      schema:
+        type: number
+        example: 1
+      style: simple
+      examples:
+        milk: 
+          description: "Sample product id for milk"
+          value: 1
+        tea: 
+          description: "Sample product id for tea"
+          value: 2  
+
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "use Token"
